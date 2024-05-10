@@ -3,13 +3,11 @@
   import Footer from './Footer.svelte'
   import { replace } from 'svelte-spa-router'
   import { afterUpdate, onMount } from 'svelte'
-  import { getPetalsBase, getPetalsWebsocket } from './ApiUtil.svelte'
   import { set as setOpenAI } from './providers/openai/util.svelte'
   import { hasActiveModels } from './Models.svelte'
 
 $: apiKey = $apiKeyStorage
 
-let showPetalsSettings = $globalStorage.enablePetals
 let pedalsEndpoint = $globalStorage.pedalsEndpoint
 let hasModels = hasActiveModels()
 
@@ -32,12 +30,6 @@ afterUpdate(() => {
     $checkStateChange++
 })
 
-const setPetalsEnabled = (event: Event) => {
-    const el = (event.target as HTMLInputElement)
-    setGlobalSettingValueByKey('enablePetals', !!el.checked)
-    showPetalsSettings = $globalStorage.enablePetals
-    hasModels = hasActiveModels()
-}
 
 </script>
 
@@ -101,69 +93,6 @@ const setPetalsEnabled = (event: Event) => {
   </article>
 
   
-  <article class="message" class:is-danger={!hasModels} class:is-warning={!showPetalsSettings} class:is-info={showPetalsSettings}>
-    <div class="message-body">
-      <label class="label" for="enablePetals">
-        <input 
-        type="checkbox"
-        class="checkbox" 
-        id="enablePetals"
-        checked={!!$globalStorage.enablePetals} 
-        on:click={setPetalsEnabled}
-      >
-        Use Petals API and Models (Llama 2)
-      </label>
-      {#if showPetalsSettings}
-        <p>Set Petals API Endpoint:</p>
-        <form
-          class="field has-addons has-addons-right"
-          on:submit|preventDefault={(event) => {
-            if (event.target && event.target[0].value) {
-              const v = event.target[0].value.trim()
-              const v2 = v.replace(/^https:/i, 'wss:').replace(/(^wss:\/\/[^/]+)\/*$/i, '$1' + getPetalsWebsocket())
-              setGlobalSettingValueByKey('pedalsEndpoint', v2)
-              event.target[0].value = v2
-            } else {
-              setGlobalSettingValueByKey('pedalsEndpoint', '')
-            }
-          }}
-        >
-          <p class="control is-expanded">
-            <input
-              aria-label="PetalsAPI Endpoint"
-              type="text"
-              class="input"
-              placeholder={getPetalsBase() + getPetalsWebsocket()}
-              value={$globalStorage.pedalsEndpoint || ''}
-            />
-          </p>
-          <p class="control">
-            <button class="button is-info" type="submit">Save</button>
-          </p>
-
-          
-        </form>
-        
-        {#if !pedalsEndpoint}
-          <p class="help is-warning">
-            Please only use the default public API for testing. It's best to <a target="_blank" href="https://github.com/petals-infra/chat.petals.dev">configure a private endpoint</a> and enter it above for connection to the Petals swarm.
-          </p>
-        {/if}
-        <p class="my-4">
-          <a target="_blank" href="https://petals.dev/">Petals</a> lets you run large language models at home by connecting to a public swarm, BitTorrent-style, without hefty GPU requirements.
-        </p>
-        <p class="mb-4">
-          You are encouraged to <a target="_blank" href="https://github.com/bigscience-workshop/petals#connect-your-gpu-and-increase-petals-capacity">set up a Petals server to share your GPU resources</a> with the public swarm. Minimum requirements to contribute Llama 2 completions are a GTX&nbsp;1080&nbsp;8GB, but the larger/faster the better.
-        </p>
-        <p class="mb-4">
-          If you're receiving errors while using Petals, <a target="_blank" href="https://health.petals.dev/">check swarm health</a> and consider <a target="_blank" href="https://github.com/bigscience-workshop/petals#connect-your-gpu-and-increase-petals-capacity">adding your GPU to the swarm</a> to help.
-        </p>
-        <p class="help is-warning">
-          Because Petals uses a public swarm, <b>do not send sensitive information</b> when using Petals.
-        </p>
-      {/if}
-    </div>
-  </article>
   {#if apiKey}
     <article class="message is-info">
       <div class="message-body">
