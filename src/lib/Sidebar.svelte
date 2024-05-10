@@ -33,8 +33,8 @@
   <div class="menu-expanse">
       <div class="navbar-brand menu-nav-bar">
         <a class="navbar-item gpt-logo" href={'#/'}>
-          <img src={logo} alt="ChatGPT-web" width="24" height="24" />
-          <p class="ml-2 is-size-5 has-text-weight-bold">ChatGPT-web</p>
+          <img src={logo} alt="AI Workshop" width="24" height="24" />
+          <p class="ml-2 is-size-5 has-text-weight-bold">AI Workshop</p>
         </a>
         <div class="chat-option-menu navbar-item is-pulled-right">
           <ChatOptionMenu bind:chatId={activeChatId} />
