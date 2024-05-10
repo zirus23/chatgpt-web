@@ -5,7 +5,7 @@
   import Fa from 'svelte-fa/src/fa.svelte'
   import { faSquarePlus, faKey } from '@fortawesome/free-solid-svg-icons/index'
   import ChatOptionMenu from './ChatOptionMenu.svelte'
-  import logo from '../assets/logo.svg'
+  import logo from '../assets/logo.webp'
   import { clickOutside } from 'svelte-use-click-outside'
   import { startNewChatWithWarning } from './Util.svelte'
   import { chatSortOptions } from './Settings.svelte'
@@ -33,8 +33,8 @@
   <div class="menu-expanse">
       <div class="navbar-brand menu-nav-bar">
         <a class="navbar-item gpt-logo" href={'#/'}>
-          <img src={logo} alt="AI Workshop" width="24" height="24" />
-          <p class="ml-2 is-size-5 has-text-weight-bold">AI Workshop</p>
+          <img src={logo} alt="AI Workshop" width="48" height="48" />
+          <p class="ml-2 is-size-3 has-text-weight-bold">AI Workshop</p>
         </a>
         <div class="chat-option-menu navbar-item is-pulled-right">
           <ChatOptionMenu bind:chatId={activeChatId} />
