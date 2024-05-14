@@ -48,6 +48,7 @@
   let imageUrl:string
   let refreshCounter = 0
   let displayMessage = message.content
+  let aiDetectionScore: number | null = null;
 
   onMount(() => {
     defaultModel = chatSettings.model
@@ -214,6 +215,32 @@
     document.body.removeChild(a)
   }
 
+  async function checkAiContent() {
+  try {
+    const response = await fetch('https://aicheck.undetectable.ai/detect', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        text: message.content,
+        key: '1713480199316x263191291540517900'
+      })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      aiDetectionScore = data.human;
+    } else {
+      console.error('Failed to check content:', response.status);
+    }
+  } catch (error) {
+    console.error('Error checking AI content:', error);
+  }
+}
+
 </script>
 
 <article
@@ -311,7 +338,7 @@
       <span class="icon"><Fa icon={faDiagramPredecessor} /></span>
       </a>
       {/if}
-      {#if !message.summarized}
+      <!-- {#if !message.summarized}
       <a
         href={'#'}
         title="Delete this message"
@@ -358,7 +385,7 @@
         <span class="icon"><Fa icon={faEyeSlash} /></span>
         {/if}
         </a>
-      {/if}
+      {/if} -->
       {#if !isImage}
         <a
           href={'#'}
@@ -371,6 +398,19 @@
         <span class="icon"><Fa icon={faClipboard} /></span>
         </a>
       {/if}
+
+      {#if !isImage && !message.summarized && !isError}
+      <a
+        href={'#'}
+        title="Check text with AI Detection"
+        class="msg-ai-check button is-small"
+        on:click|preventDefault={checkAiContent}
+      >
+        <span class="icon"><Fa icon={faCircleCheck} /></span>
+      </a>
+      {/if}
+    
+      <!--
       {#if imageUrl}
         <a
           href={'#'}
@@ -382,8 +422,40 @@
         >
         <span class="icon"><Fa icon={faDownload} /></span>
         </a>
-      {/if}
+      {/if} -->
       </div>
-
   </div>
+
+  <style>
+    .ai-score {
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.9em;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .ai-score-neutral {
+      color: #4A90E2; /* Blue color for neutral scores */
+      background-color: #f0f0f0;
+    }
+    .ai-score-success {
+      color: #ffffff; /* White text for better readability */
+      background-color: #28a745; /* Bootstrap green for success */
+    }
+    .ai-score-danger {
+      color: #ffffff; /* White text for better readability */
+      background-color: #dc3545; /* Bootstrap red for danger */
+    }
+  </style>
+  
+  
+  <div>
+    {#if aiDetectionScore !== null}
+      <span class={aiDetectionScore < 10 ? 'ai-score ai-score-success' : 'ai-score ai-score-danger'}>
+        AI Detection Score: {aiDetectionScore}
+      </span>
+    {/if}
+  </div>  
+
 </article>
