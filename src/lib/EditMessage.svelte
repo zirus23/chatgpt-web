@@ -217,7 +217,7 @@
 
   async function checkAiContent() {
   try {
-    const response = await fetch('https://aicheck.undetectable.ai/detect', {
+    const response = await fetch('https://aicheck.undetectable.ai/detectIndividual', {
       method: 'POST',
       mode: 'no-cors',
       headers: {
