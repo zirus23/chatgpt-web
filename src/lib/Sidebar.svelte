@@ -33,9 +33,6 @@
   <div class="menu-expanse">
     <div class="navbar-brand menu-nav-bar" style="flex-direction: column; align-items: center;">
       <img src={logo} alt="AI Workshop" style="width:300px; height:300px;" />
-      <a class="navbar-item gpt-logo" href={'#/'}>
-        <p class="ml-2 is-size-3 has-text-weight-bold">AI Workshop</p>
-      </a>
       <div class="chat-option-menu navbar-item is-pulled-right">
         <ChatOptionMenu bind:chatId={activeChatId} />
       </div>
